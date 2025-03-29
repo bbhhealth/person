@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>สำรวจประชากร อำเภอบ้านบึง</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --transition-speed: 0.4s;
+      --bright-green: #00ff88;
+      --vibrant-green: #00cc66;
+      --electric-blue: #00b4d8;
+      --deep-blue: #0077b6;
+      --light-bg: #f8f9fa;
+      --text-color: #2b2d42;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Sarabun', sans-serif;
+    }
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: var(--light-bg);
+      color: var(--text-color);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    
+    .app-container {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      padding-top: 8vh;
+      background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+    }
+    
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 10px;
+      width: 100%;
+      max-width: 800px;
+      animation: fadeInDown 0.8s ease-out;
+    }
+    
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .header img {
+      width: 80px;
+      height: auto;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+      transition: transform 0.3s ease;
+    }
+    
+    .header img:hover {
+      transform: scale(1.05) rotate(-5deg);
+    }
+    
+    .title-container {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .header h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--deep-blue);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      line-height: 1.3;
+    }
+    
+    .btn-container {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin: 20px 0;
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+    
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 20px;
+      font-size: 1.3rem;
+      border-radius: 14px;
+      color: white;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      transition: all var(--transition-speed) cubic-bezier(0.22, 1, 0.36, 1);
+      border: none;
+      cursor: pointer;
+      height: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0));
+      opacity: 0;
+      transition: opacity var(--transition-speed);
+    }
+    
+    .btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+    }
+    
+    .btn:hover::after {
+      opacity: 1;
+    }
+    
+    .btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .btn-green {
+      background: linear-gradient(135deg, var(--bright-green) 0%, var(--vibrant-green) 100%);
+    }
+    
+    .btn-blue {
+      background: linear-gradient(135deg, var(--electric-blue) 0%, var(--deep-blue) 100%);
+    }
+    
+    .footer {
+      margin-top: 40px;
+      padding: 20px;
+      font-size: 0.9rem;
+      color: #6c757d;
+      text-align: center;
+      width: 100%;
+      animation: fadeIn 1s ease-out 0.4s both;
+    }
+    
+    /* สไตล์สำหรับ iframe */
+    .iframe-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .iframe-container.active {
+      opacity: 1;
+    }
+    
+    .iframe-header {
+      padding: 18px 20px;
+      background: linear-gradient(135deg, var(--deep-blue) 0%, #023e8a 100%);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .iframe-header h2 {
+      font-weight: 600;
+      font-size: 1.3rem;
+    }
+    
+    .iframe-content {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: #f5f7fa;
+    }
+    
+    .close-btn {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ff2e2e 100%);
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+    }
+    
+    .close-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .header img {
+        width: 70px;
+      }
+      
+      .header h2 {
+        font-size: 1.5rem;
+        text-align: center;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .app-container {
+        padding-top: 6vh;
+      }
+      
+      .header h2 {
+        font-size: 1.3rem;
+      }
+      
+      .btn {
+        font-size: 1.15rem;
+        height: 75px;
+        padding: 18px;
+        border-radius: 12px;
+      }
+      
+      .btn-container {
+        gap: 18px;
+      }
+      
+      .iframe-header {
+        padding: 15px;
+      }
+      
+      .iframe-header h2 {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <div class="header">
+      <div class="logo-container">
+        <img src="https://firebasestorage.googleapis.com/v0/b/web-app-f13f4.appspot.com/o/BBH%20(2).png?alt=media&token=6986cc8d-0bc2-4cc4-aae9-c9fd39ec6a52" alt="โลโก้">
+      </div>
+      <div class="title-container">
+        <h2>ระบบสำรวจประชากร อำเภอบ้านบึง</h2>
+      </div>
+    </div>
+    
+    <div class="btn-container">
+      <button onclick="showIframe('ตำบลบ้านบึง', 'https://script.google.com/a/*/macros/s/AKfycbxX0oHPrYNiqy57CJ9LsAXcgVMlhbP_nLOngBuD2j46MIltmOmyzfhenFnPN-1GJI8/exec')" 
+         class="btn btn-green">
+        ตำบลบ้านบึง
+      </button>
+
+      <button onclick="showIframe('ตำบลคลองกิ่ว', 'https://script.google.com/a/*/macros/s/AKfycbx879bd2jFyHd1m5EqBnIGpOmx7Wd8wlTF6jH0kmphwe947TfGTfO0qwTfjyvd4KsS_eg/exec')" 
+         class="btn btn-blue">
+        ตำบลคลองกิ่ว
+      </button>
+
+      <button onclick="showIframe('ตำบลมาบไผ่', 'https://script.google.com/a/*/macros/s/AKfycbwpR7qwl8G5tmOqQfVgCKMb4qSbdQ-rEg7YxzB12AnkoQY3jkMGd0CvayWawPjGRKO0Qg/exec')" 
+         class="btn btn-green">
+        ตำบลมาบไผ่
+      </button>
+      
+      <button onclick="showIframe('ตำบลหนองซ้ำซาก', 'https://script.google.com/a/*/macros/s/AKfycbzCpr_6R5I-Av7m1KBrMiioD108WYjQlAOgqaFAlEZ56-4vR53GSsFDhTodQyvC1Bgs2Q/exec')" 
+         class="btn btn-blue">
+        ตำบลหนองซ้ำซาก
+      </button>
+
+      <button onclick="showIframe('ตำบลหนองบอนแดง', 'https://script.google.com/a/*/macros/s/AKfycbx1D2vrTIKgcsESKaQwZEoTq14tv9EXc_8c5TM5mJLulHetinbrrNugdhXPEzjZ2zMMwg/exec')" 
+         class="btn btn-green">
+        ตำบลหนองบอนแดง
+      </button>
+      
+      <button onclick="showIframe('ตำบลหนองชาก', 'https://script.google.com/a/*/macros/s/AKfycbzprb5DM3uKar9ejJBuW4UX_dDUCQOCNev_foWcmvqOuvaqV7QHyqubgj6mt90v0XPwmg/exec')" 
+         class="btn btn-blue">
+        ตำบลหนองชาก
+      </button>
+
+      <button onclick="showIframe('ตำบลหนองอิรุณ', 'https://script.google.com/a/*/macros/s/AKfycbxR5oO5QoxKfJIR1S9fKJ-_cOczr9JS4omAduoYVN52o8bBk-aZPCY04qPExqRoIY6q/exec')" 
+         class="btn btn-green">
+        ตำบลหนองอิรุณ
+      </button>
+
+      <button onclick="showIframe('ตำบลหนองไผ่แก้ว', 'https://script.google.com/a/*/macros/s/AKfycbxRz2XryDdfTfnXt87a5xju0XTSnxpJxgDKBTait39Z9Jo3ECpYHZuzdgZ8rMmNdVLf/exec')" 
+         class="btn btn-blue">
+        ตำบลหนองไผ่แก้ว
+      </button>
+    </div>
+    
+    <div class="footer">
+      © 2025 โรงพยาบาลบ้านบึง จังหวัดชลบุรี
+    </div>
+  </div>
+
+  <!-- iframe container -->
+  <div id="iframeContainer" class="iframe-container">
+    <div class="iframe-header">
+      <h2 id="iframeTitle"></h2>
+      <button class="close-btn" onclick="hideIframe()">ปิด</button>
+    </div>
+    <iframe id="contentFrame" class="iframe-content" frameborder="0"></iframe>
+  </div>
+
+  <script>
+    function adjustHeight() {
+      const appContainer = document.querySelector('.app-container');
+      appContainer.style.minHeight = window.innerHeight + 'px';
+    }
+    
+    function showIframe(title, url) {
+      const iframeContainer = document.getElementById('iframeContainer');
+      const iframeTitle = document.getElementById('iframeTitle');
+      const contentFrame = document.getElementById('contentFrame');
+      
+      iframeTitle.textContent = title;
+      contentFrame.src = url;
+      iframeContainer.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      
+      setTimeout(() => {
+        iframeContainer.classList.add('active');
+      }, 10);
+    }
+    
+    function hideIframe() {
+      const iframeContainer = document.getElementById('iframeContainer');
+      const contentFrame = document.getElementById('contentFrame');
+      
+      iframeContainer.classList.remove('active');
+      
+      setTimeout(() => {
+        contentFrame.src = '';
+        iframeContainer.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }, 300);
+    }
+    
+    window.addEventListener('load', adjustHeight);
+    window.addEventListener('resize', adjustHeight);
+  </script>
+</body>
+</html>
